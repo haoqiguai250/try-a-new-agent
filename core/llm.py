@@ -1,5 +1,8 @@
 from volcenginesdkarkruntime import Ark
 from config import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 class LLMClient:
     def __init__(self):
@@ -10,15 +13,19 @@ class LLMClient:
         self.model = settings.ARK_MODEL
 
     def chat(self, input_messages):
-        # 完全按照你给的火山官方格式！
-        response = self.client.responses.create(
-            model=self.model,
-            input=input_messages,
-            tools=[
-                {
-                    "type": "web_search",
-                    "max_keyword": 2,
-                }
-            ],
-        )
-        return response
+        try:
+            response = self.client.responses.create(
+                model=self.model,
+                input=input_messages,
+                tools=[
+                    {
+                        "type": "web_search",
+                        "max_keyword": 2,
+                    }
+                ],
+            )
+            logger.info("调用火山引擎成功")
+            return response
+        except Exception as e:
+            logger.error(f"LLM调用异常: {str(e)}")
+            raise Exception(f"大模型服务异常: {str(e)}")

@@ -15,9 +15,10 @@ class Memory:
         return self.messages
 
     def _truncate(self):
-        # 保留最近 N 轮对话
-        if len(self.messages) > self.max_round * 2:
-            self.messages = self.messages[-self.max_round * 2:]
+        # 一轮对话占2条消息，超过就只保留最新的，保留N轮对话
+        max_messages = self.max_round * 2
+        if len(self.messages) > max_messages:
+            self.messages = self.messages[-max_messages:]
 
     def clear(self):
         self.messages = []
